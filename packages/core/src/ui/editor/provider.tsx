@@ -1,9 +1,11 @@
-"use client";
+'use client';
 
-import { createContext } from "react";
+import { createContext } from 'react';
 
 export const NovelContext = createContext<{
   completionApi: string;
+  completionId: string;
 }>({
-  completionApi: "/api/generate",
+  completionApi: '/api/generate',
+  completionId: 'novel',
 });

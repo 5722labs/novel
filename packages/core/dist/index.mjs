@@ -402,14 +402,7 @@ import { Markdown } from "tiptap-markdown";
 import Highlight from "@tiptap/extension-highlight";
 
 // src/ui/editor/extensions/slash-command.tsx
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useLayoutEffect,
-  useContext
-} from "react";
+import { useState, useEffect, useCallback, useRef, useLayoutEffect, useContext } from "react";
 import { Extension } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
 import { ReactRenderer } from "@tiptap/react";
@@ -523,7 +516,8 @@ var getPrevText = (editor, {
 // src/ui/editor/provider.tsx
 import { createContext } from "react";
 var NovelContext = createContext({
-  completionApi: "/api/generate"
+  completionApi: "/api/generate",
+  completionId: "novel"
 });
 
 // src/ui/editor/extensions/slash-command.tsx
@@ -534,11 +528,7 @@ var Command = Extension.create({
     return {
       suggestion: {
         char: "/",
-        command: ({
-          editor,
-          range,
-          props
-        }) => {
+        command: ({ editor, range, props }) => {
           props.command({ editor, range });
         }
       }
@@ -693,9 +683,9 @@ var CommandList = ({
   range
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { completionApi } = useContext(NovelContext);
+  const { completionApi, completionId } = useContext(NovelContext);
   const { complete, isLoading } = useCompletion({
-    id: "novel",
+    id: completionId,
     api: completionApi,
     onResponse: (response) => {
       if (response.status === 429) {
@@ -16674,6 +16664,7 @@ var ImageResizer = ({ editor }) => {
 // src/ui/editor/index.tsx
 import { jsx as jsx9, jsxs as jsxs8 } from "react/jsx-runtime";
 function Editor2({
+  completionId = "novel",
   completionApi = "/api/generate",
   className = "novel-relative novel-min-h-[500px] novel-w-full novel-max-w-screen-lg novel-border-stone-200 novel-bg-white sm:novel-mb-[calc(20vh)] sm:novel-rounded-lg sm:novel-border sm:novel-shadow-lg",
   defaultValue = defaultEditorContent,
@@ -16723,7 +16714,7 @@ function Editor2({
     autofocus: "end"
   });
   const { complete, completion, isLoading, stop } = useCompletion2({
-    id: "novel",
+    id: completionId,
     api: completionApi,
     onFinish: (_prompt, completion2) => {
       editor == null ? void 0 : editor.commands.setTextSelection({
@@ -16790,7 +16781,8 @@ function Editor2({
     NovelContext.Provider,
     {
       value: {
-        completionApi
+        completionApi,
+        completionId
       },
       children: /* @__PURE__ */ jsxs8(
         "div",

@@ -1,4 +1,4 @@
-import { Editor } from "@tiptap/core";
+import { Editor } from '@tiptap/core';
 
 export const getPrevText = (
   editor: Editor,
@@ -15,7 +15,7 @@ export const getPrevText = (
   return editor.state.doc.textBetween(
     Math.max(0, editor.state.selection.from - chars),
     editor.state.selection.from - offset,
-    "\n"
+    '\n'
   );
   // complete(editor.storage.markdown.getMarkdown());
 };

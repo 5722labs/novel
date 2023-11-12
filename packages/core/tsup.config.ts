@@ -1,14 +1,14 @@
-import { defineConfig, Options } from "tsup";
+import { defineConfig, Options } from 'tsup';
 
 export default defineConfig((options: Options) => ({
-  entry: ["src/index.ts"],
+  entry: ['src/index.ts'],
   banner: {
     js: "'use client'",
   },
-  format: ["cjs", "esm"],
+  format: ['cjs', 'esm'],
   dts: true,
   clean: true,
-  external: ["react"],
+  external: ['react'],
   injectStyle: true,
   ...options,
 }));

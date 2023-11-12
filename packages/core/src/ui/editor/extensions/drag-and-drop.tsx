@@ -1,8 +1,8 @@
-import { Extension } from "@tiptap/core";
+import { Extension } from '@tiptap/core';
 
-import { NodeSelection, Plugin } from "@tiptap/pm/state";
+import { NodeSelection, Plugin } from '@tiptap/pm/state';
 // @ts-ignore
-import { __serializeForClipboard, EditorView } from "@tiptap/pm/view";
+import { __serializeForClipboard, EditorView } from '@tiptap/pm/view';
 
 export interface DragHandleOptions {
   /**
@@ -25,16 +25,8 @@ function nodeDOMAtCoords(coords: { x: number; y: number }) {
     .elementsFromPoint(coords.x, coords.y)
     .find(
       (elem: Element) =>
-        elem.parentElement?.matches?.(".ProseMirror") ||
-        elem.matches(
-          [
-            "li",
-            "p:not(:first-child)",
-            "pre",
-            "blockquote",
-            "h1, h2, h3, h4, h5, h6",
-          ].join(", ")
-        )
+        elem.parentElement?.matches?.('.ProseMirror') ||
+        elem.matches(['li', 'p:not(:first-child)', 'pre', 'blockquote', 'h1, h2, h3, h4, h5, h6'].join(', '))
     );
 }
 
@@ -63,17 +55,15 @@ function DragHandle(options: DragHandleOptions) {
     const nodePos = nodePosAtDOM(node, view);
     if (nodePos == null || nodePos < 0) return;
 
-    view.dispatch(
-      view.state.tr.setSelection(NodeSelection.create(view.state.doc, nodePos))
-    );
+    view.dispatch(view.state.tr.setSelection(NodeSelection.create(view.state.doc, nodePos)));
 
     const slice = view.state.selection.content();
     const { dom, text } = __serializeForClipboard(view, slice);
 
     event.dataTransfer.clearData();
-    event.dataTransfer.setData("text/html", dom.innerHTML);
-    event.dataTransfer.setData("text/plain", text);
-    event.dataTransfer.effectAllowed = "copyMove";
+    event.dataTransfer.setData('text/html', dom.innerHTML);
+    event.dataTransfer.setData('text/plain', text);
+    event.dataTransfer.effectAllowed = 'copyMove';
 
     event.dataTransfer.setDragImage(node, 0, 0);
 
@@ -83,7 +73,7 @@ function DragHandle(options: DragHandleOptions) {
   function handleClick(event: MouseEvent, view: EditorView) {
     view.focus();
 
-    view.dom.classList.remove("dragging");
+    view.dom.classList.remove('dragging');
 
     const node = nodeDOMAtCoords({
       x: event.clientX + 50 + options.dragHandleWidth,
@@ -95,35 +85,33 @@ function DragHandle(options: DragHandleOptions) {
     const nodePos = nodePosAtDOM(node, view);
     if (!nodePos) return;
 
-    view.dispatch(
-      view.state.tr.setSelection(NodeSelection.create(view.state.doc, nodePos))
-    );
+    view.dispatch(view.state.tr.setSelection(NodeSelection.create(view.state.doc, nodePos)));
   }
 
   let dragHandleElement: HTMLElement | null = null;
 
   function hideDragHandle() {
     if (dragHandleElement) {
-      dragHandleElement.classList.add("hidden");
+      dragHandleElement.classList.add('hidden');
     }
   }
 
   function showDragHandle() {
     if (dragHandleElement) {
-      dragHandleElement.classList.remove("hidden");
+      dragHandleElement.classList.remove('hidden');
     }
   }
 
   return new Plugin({
     view: (view) => {
-      dragHandleElement = document.createElement("div");
+      dragHandleElement = document.createElement('div');
       dragHandleElement.draggable = true;
-      dragHandleElement.dataset.dragHandle = "";
-      dragHandleElement.classList.add("drag-handle");
-      dragHandleElement.addEventListener("dragstart", (e) => {
+      dragHandleElement.dataset.dragHandle = '';
+      dragHandleElement.classList.add('drag-handle');
+      dragHandleElement.addEventListener('dragstart', (e) => {
         handleDragStart(e, view);
       });
-      dragHandleElement.addEventListener("click", (e) => {
+      dragHandleElement.addEventListener('click', (e) => {
         handleClick(e, view);
       });
 
@@ -150,7 +138,7 @@ function DragHandle(options: DragHandleOptions) {
             y: event.clientY,
           });
 
-          if (!(node instanceof Element) || node.matches("ul, ol")) {
+          if (!(node instanceof Element) || node.matches('ul, ol')) {
             hideDragHandle();
             return;
           }
@@ -164,7 +152,7 @@ function DragHandle(options: DragHandleOptions) {
           rect.top += (lineHeight - 24) / 2;
           rect.top += paddingTop;
           // Li markers
-          if (node.matches("ul:not([data-type=taskList]) li, ol li")) {
+          if (node.matches('ul:not([data-type=taskList]) li, ol li')) {
             rect.left -= options.dragHandleWidth;
           }
           rect.width = options.dragHandleWidth;
@@ -183,13 +171,13 @@ function DragHandle(options: DragHandleOptions) {
         },
         // dragging class is used for CSS
         dragstart: (view) => {
-          view.dom.classList.add("dragging");
+          view.dom.classList.add('dragging');
         },
         drop: (view) => {
-          view.dom.classList.remove("dragging");
+          view.dom.classList.remove('dragging');
         },
         dragend: (view) => {
-          view.dom.classList.remove("dragging");
+          view.dom.classList.remove('dragging');
         },
       },
     },
@@ -199,7 +187,7 @@ function DragHandle(options: DragHandleOptions) {
 interface DragAndDropOptions {}
 
 const DragAndDrop = Extension.create<DragAndDropOptions>({
-  name: "dragAndDrop",
+  name: 'dragAndDrop',
 
   addProseMirrorPlugins() {
     return [
